@@ -4,7 +4,6 @@ MIN_MASTER_INSTANCES=1
 MASTER_INSTANCE_TAGNAME="AS_Master"
 WORKER_INSTANCE_TAGNAME="AS_Worker"
 
-LOCAL_IP_ADDRESS=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 AZ="$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)"
 REGION="${AZ::-1}"
 
@@ -31,6 +30,7 @@ apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E8
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get --yes install linux-image-extra-$(uname -r)
+apt-get --yes install apparmor
 apt-get --yes install docker-engine
 
 usermod -aG docker ubuntu
@@ -45,22 +45,14 @@ CODENAME=$(lsb_release -cs)
 echo "deb http://repos.mesosphere.com/${DISTRO} ${CODENAME} main" > /etc/apt/sources.list.d/mesosphere.list
 apt-get --yes update
 apt-get --yes install mesos
-
-# Disable mesos-master on the slaves
-service mesos-master stop
-echo manual | tee /etc/init/mesos-master.override
-
-# Disable zookeeper on the slaves
-service zookeeper stop
-echo manual | tee /etc/init/zookeeper.override
-apt-get -y remove --purge zookeeper
+echo "$FIRST_MASTER_IP  mesosmaster" >> /etc/hosts
+mkdir -p /var/lib/mesos
+chown ubuntu:ubuntu /var/lib/mesos
 
 echo 'docker,mesos' > /etc/mesos-slave/containerizers
 echo '5mins' > /etc/mesos-slave/executor_registration_timeout
-echo $LOCAL_IP_ADDRESS | tee /etc/mesos-slave/ip
-echo zk://$LOCAL_IP_ADDRESS:2181/mesos | tee /etc/mesos/zk
-echo $LOCAL_IP_ADDRESS | tee /etc/mesos-slave/hostname
 
-service mesos-slave restart
+# service mesos-slave start
 
-# screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=$FIRST_MASTER_IP:5050 --ip=$LOCAL_IP_ADDRESS --work_dir=/var/lib/mesos"
+MY_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=mesosmaster:5050 --ip=$MY_IP --work_dir=/var/lib/mesos"

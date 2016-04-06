@@ -29,6 +29,7 @@ apt-get --yes install apt-transport-https ca-certificates
 apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list
+
 apt-get update
 apt-get --yes install linux-image-extra-$(uname -r)
 apt-get --yes install docker-engine
@@ -58,7 +59,7 @@ apt-get -y remove --purge zookeeper
 echo 'docker,mesos' > /etc/mesos-slave/containerizers
 echo '5mins' > /etc/mesos-slave/executor_registration_timeout
 echo $LOCAL_IP_ADDRESS | tee /etc/mesos-slave/ip
-echo zk://$LOCAL_IP_ADDRESS:2181/mesos | tee /etc/mesos/zk
+echo zk://$FIRST_MASTER_IP:2181/mesos | tee /etc/mesos/zk
 echo $LOCAL_IP_ADDRESS | tee /etc/mesos-slave/hostname
 
 service mesos-slave restart

@@ -1,6 +1,17 @@
 #!/bin/bash
 
-param_mesos_master_ip="192.168.10.126"
+MIN_MASTER_INSTANCES=1
+
+# Looking for other master instances for HA (Zookeeper)
+MASTER_IPS=$(aws ec2 describe-instances --region eu-west-1 --filters "Name=tag:Name,Values=AS_Master" | jq '. | {ips: .Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddress}' | grep "\." | cut -f4 -d'"')
+MASTER_INSTANCES_ONLINE=$(echo "$MASTER_IPS" | wc -l)
+while [ "$MASTER_INSTANCES_ONLINE" -lt "$MIN_MASTER_INSTANCES" ]; do
+  sleep 2
+  echo "Waiting for more master instances. ($MASTER_INSTANCES_ONLINE/$MIN_MASTER_INSTANCES online)"
+  MASTER_IPS=$(aws ec2 describe-instances --region eu-west-1 --filters "Name=tag:Name,Values=AS_Master" | jq '. | {ips: .Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddress}' | grep "\." | cut -f4 -d'"' | head -n1)
+  MASTER_INSTANCES_ONLINE=$(echo "$MASTER_IPS" | wc -l)
+done
+FIRST_MASTER_IP=$(echo "$MASTER_IPS" | head -n1)
 
 #
 # DOCKER
@@ -28,7 +39,7 @@ CODENAME=$(lsb_release -cs)
 echo "deb http://repos.mesosphere.com/${DISTRO} ${CODENAME} main" > /etc/apt/sources.list.d/mesosphere.list
 apt-get --yes update
 apt-get --yes install mesos
-echo "$param_mesos_master_ip  mesosmaster" >> /etc/hosts
+echo "$FIRST_MASTER_IP  mesosmaster" >> /etc/hosts
 mkdir -p /var/lib/mesos
 chown ubuntu:ubuntu /var/lib/mesos
 
@@ -37,5 +48,5 @@ echo '5mins' > /etc/mesos-slave/executor_registration_timeout
 
 service mesos-slave start
 
-#MY_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-#screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=mesosmaster:5050 --ip=$MY_IP --work_dir=/var/lib/mesos"
+# MY_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+# screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=$MY_IP:5050 --ip=$MY_IP --work_dir=/var/lib/mesos"

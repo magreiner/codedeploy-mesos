@@ -19,8 +19,6 @@ apt-get --yes install docker-engine
 usermod -aG docker ubuntu
 
 service docker start
-
-exit 1
 #
 # MESOS CLIENT
 #

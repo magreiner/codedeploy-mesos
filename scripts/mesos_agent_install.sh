@@ -71,6 +71,6 @@ service mesos-slave restart
 mkdir git
 cd git
 ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-git clone git@bitbucket.org:m_greiner/docbox.git
+git clone https://bitbucket.org/m_greiner/docbox.git
 cd ./seafile/
 sudo docker build -t "mgreiner/seafile" "."

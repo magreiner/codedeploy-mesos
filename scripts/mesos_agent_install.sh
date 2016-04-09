@@ -66,3 +66,10 @@ echo $LOCAL_IP_ADDRESS | tee /etc/mesos-slave/hostname
 service mesos-slave restart
 
 # screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=$FIRST_MASTER_IP:5050 --ip=$LOCAL_IP_ADDRESS --work_dir=/var/lib/mesos"
+
+# Preload seafile docker image
+mkdir git
+cd git
+git clone git@bitbucket.org:m_greiner/docbox.git
+cd ./seafile/
+sudo docker build -t "mgreiner/seafile" "."

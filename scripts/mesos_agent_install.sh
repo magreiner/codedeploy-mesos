@@ -68,9 +68,6 @@ service mesos-slave restart
 # screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=$FIRST_MASTER_IP:5050 --ip=$LOCAL_IP_ADDRESS --work_dir=/var/lib/mesos"
 
 # Preload seafile docker image
-mkdir git
-cd git
 ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-git clone https://bitbucket.org/m_greiner/docbox.git
-cd ./seafile/
-sudo docker build -t "mgreiner/seafile" "."
+git clone https://bitbucket.org/m_greiner/docbox.git /tmp/seafile 2>/dev/null
+docker build -t "mgreiner/seafile" "/tmp/seafile/seafile/"

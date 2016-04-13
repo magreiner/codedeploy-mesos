@@ -50,8 +50,9 @@ unzip /tmp/consul_*_linux_amd64.zip -d /usr/bin/
 rm /tmp/consul_*_linux_amd64.zip
 chmod +x /usr/bin/consul
 
-initctl reload-configuration 
-start consul
+initctl reload-configuration
+stop consul-client &>/dev/null
+start consul-client
 
 # Debug with:
 # consul agent -server \

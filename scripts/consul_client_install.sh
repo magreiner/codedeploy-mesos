@@ -34,6 +34,7 @@ cat > /etc/consul.d/client/config.json << EOF
 {
     "bootstrap": false,
     "server": false,
+    "bind_addr": "$LOCAL_IP_ADDRESS",
     "datacenter": "MesosCluster",
     "data_dir": "/var/consul",
     "ui_dir": "/opt/consul",
@@ -49,6 +50,7 @@ unzip /tmp/consul_*_linux_amd64.zip -d /usr/bin/
 rm /tmp/consul_*_linux_amd64.zip
 chmod +x /usr/bin/consul
 
+initctl reload-configuration 
 start consul
 
 # Debug with:

@@ -7,6 +7,13 @@ files:
     destination: /tmp/
   - source: /packages/consul-template_0.14.0_linux_amd64.zip
     destination: /tmp/
+  - source: /init/consul-client.conf
+    destination: /etc/init/
+permissions:
+  - object: /etc/init/consul-client.conf
+    owner: root
+    group: root
+    mode: 644
 hooks:
   AfterInstall:
     - location: /scripts/mesos_agent_install.sh

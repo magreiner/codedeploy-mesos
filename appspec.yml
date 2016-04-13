@@ -1,7 +1,17 @@
 version: 0.0
 os: linux
+files:
+  - source: /packages/consul_0.6.4_linux_amd64.zip
+    destination: /tmp/
+  - source: /packages/consul_0.6.4_web_ui.zip
+    destination: /tmp/
+  - source: /packages/consul-template_0.14.0_linux_amd64.zip
+    destination: /tmp/
 hooks:
   AfterInstall:
     - location: /scripts/mesos_agent_install.sh
+      timeout: 300
+      runas: root
+    - location: scripts/consul_client_install.sh
       timeout: 300
       runas: root

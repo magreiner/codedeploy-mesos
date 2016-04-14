@@ -49,7 +49,7 @@ cat > /etc/consul.d/client/config.json << EOF
 EOF
 
 # Extract and start consul binary
-unzip /tmp/consul_*_linux_amd64.zip -d /usr/bin/
+unzip -o /tmp/consul_*_linux_amd64.zip -d /usr/bin/
 rm /tmp/consul_*_linux_amd64.zip
 chmod +x /usr/bin/consul
 
@@ -68,14 +68,14 @@ start consul-client
 #     -ui-dir /opt/consul-ui/
 
 # Extract consul web_ui
-unzip /tmp/consul_*_web_ui.zip -d /opt/consul/
+unzip -o /tmp/consul_*_web_ui.zip -d /opt/consul/
 rm /tmp/consul_*_web_ui.zip
 chown -R consul:consul /opt/consul
 
 # Extract and start consul-template
 # Source:
 # https://releases.hashicorp.com/consul-template/
-unzip /tmp/consul-template_*_linux_amd64.zip -d /usr/bin/
+unzip -o /tmp/consul-template_*_linux_amd64.zip -d /usr/bin/
 rm /tmp/consul-template_*_linux_amd64.zip
 chmod a+x /usr/bin/consul-template
 

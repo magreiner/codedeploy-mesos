@@ -20,7 +20,9 @@ while [ "$MASTER_INSTANCES_ONLINE" -lt "$MIN_MASTER_INSTANCES" ]; do
 done
 FIRST_MASTER_IP=$(echo "$MASTER_IPS" | head -n1)
 
+# install requirements
 apt-get install -yq unzip
+pip install consulate
 
 # Create consul user
 adduser --quiet --disabled-password -shell /bin/bash --home /home/consul --gecos "User" consul
@@ -35,6 +37,7 @@ cat > /etc/consul.d/client/config.json << EOF
     "bootstrap": false,
     "server": false,
     "bind_addr": "$LOCAL_IP_ADDRESS",
+    "client_addr": "0.0.0.0",
     "datacenter": "MesosCluster",
     "data_dir": "/var/consul",
     "ui_dir": "/opt/consul",

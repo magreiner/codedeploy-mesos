@@ -44,6 +44,7 @@ echo '5mins' > /etc/mesos-slave/executor_registration_timeout
 echo "$LOCAL_IP_ADDRESS"| tee /etc/mesos-slave/ip
 echo "zk://$FIRST_MASTER_IP:2181/mesos" | tee /etc/mesos/zk
 echo "$LOCAL_IP_ADDRESS" | tee /etc/mesos-slave/hostname
+echo "cgroups/cpu,cgroups/mem" | tee /etc/mesos-slave/isolation
 
 service mesos-slave restart
 

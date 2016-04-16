@@ -44,7 +44,8 @@ cat > /etc/consul.d/client/config.json << EOF
     "encrypt": "W0OoYJkDcHa+EwmUtbOtcA==",
     "log_level": "INFO",
     "enable_syslog": true,
-    "start_join": [ "$FIRST_MASTER_IP" ]
+    "retry_join": [ "$FIRST_MASTER_IP" ],
+    "retry_interval": "10s"
 }
 EOF
 

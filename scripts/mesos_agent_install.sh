@@ -21,24 +21,6 @@ done
 FIRST_MASTER_IP="$(echo "$MASTER_IPS" | head -n1)"
 
 #
-# DOCKER
-#
-apt-get update
-apt-get --yes install apt-transport-https ca-certificates
-
-apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-
-echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list
-
-apt-get update
-apt-get --yes install apparmor \
-                      linux-image-extra-$(uname -r)
-apt-get --yes install docker-engine
-
-usermod -aG docker ubuntu
-
-service docker start
-#
 # MESOS CLIENT
 #
 apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
@@ -66,17 +48,3 @@ echo "$LOCAL_IP_ADDRESS" | tee /etc/mesos-slave/hostname
 service mesos-slave restart
 
 # screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=$FIRST_MASTER_IP:5050 --ip=$LOCAL_IP_ADDRESS --work_dir=/var/lib/mesos"
-
-# Preload seafile docker image
-# If a old docker container is already running
-# it will be removed and newly build
-ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-rm -rf /tmp/docbox 2>/dev/null
-
-git clone https://bitbucket.org/m_greiner/docbox.git /tmp/docbox 2>/dev/null
-
-SEAFILE_CONTAINER_NAME="$(docker ps | grep "seafile" | cut -d' ' -f1)"
-docker kill $SEAFILE_CONTAINER_NAME &>/dev/null
-docker rm $SEAFILE_CONTAINER_NAME &>/dev/null
-docker rmi mgreiner/seafile &>/dev/null
-docker build -t "mgreiner/seafile" "/tmp/docbox/seafile/"

@@ -14,3 +14,10 @@ docker kill $SEAFILE_CONTAINER_NAME &>/dev/null
 docker rm $SEAFILE_CONTAINER_NAME &>/dev/null
 docker rmi mgreiner/seafile &>/dev/null
 docker build -t "mgreiner/seafile" "/tmp/docbox/seafile/"
+
+
+MYSQL_CONTAINER_NAME="$(docker ps | grep "mysql" | cut -d' ' -f1)"
+docker kill $MYSQL_CONTAINER_NAME &>/dev/null
+docker rm $MYSQL_CONTAINER_NAME &>/dev/null
+docker rmi mgreiner/mysql &>/dev/null
+docker build -t "mgreiner/mysql" "/tmp/docbox/mysql/"

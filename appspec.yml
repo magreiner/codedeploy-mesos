@@ -16,9 +16,6 @@ hooks:
     - location: /scripts/mesos_agent_install.sh
       timeout: 300
       runas: root
-    - location: scripts/consul_client.sh
-      timeout: 300
-      runas: root
     - location: scripts/dns-services.sh
       timeout: 300
       runas: root

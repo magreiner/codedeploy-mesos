@@ -39,12 +39,15 @@ service zookeeper stop
 echo manual | tee /etc/init/zookeeper.override
 apt-get -y remove --purge zookeeper
 
-echo 'docker,mesos' > /etc/mesos-slave/containerizers
-echo '5mins' > /etc/mesos-slave/executor_registration_timeout
-echo "$LOCAL_IP_ADDRESS"| tee /etc/mesos-slave/ip
+echo 'docker,mesos'       | tee /etc/mesos-slave/containerizers
+echo '5mins'              | tee /etc/mesos-slave/executor_registration_timeout
+echo "$LOCAL_IP_ADDRESS"  | tee /etc/mesos-slave/ip
 echo "zk://$FIRST_MASTER_IP:2181/mesos" | tee /etc/mesos/zk
-echo "$LOCAL_IP_ADDRESS" | tee /etc/mesos-slave/hostname
-echo "cgroups/cpu,cgroups/mem" | tee /etc/mesos-slave/isolation
+echo "$LOCAL_IP_ADDRESS"                | tee /etc/mesos-slave/hostname
+echo "cgroups/cpu,cgroups/mem"          | tee /etc/mesos-slave/isolation
+
+# Doesnt work yet
+# echo "ports:[3306-3306,4567-4567,4568-4568,4444-4444,31000-32000]" | tee /etc/mesos-slave/resources
 
 service mesos-slave restart
 

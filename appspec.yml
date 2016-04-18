@@ -1,22 +1,10 @@
 version: 0.0
 os: linux
 files:
-  - source: /packages/consul_0.6.4_linux_amd64.zip
-    destination: /tmp/
-  - source: /packages/consul_0.6.4_web_ui.zip
-    destination: /tmp/
-  - source: /packages/consul-template_0.14.0_linux_amd64.zip
-    destination: /tmp/
   - source: /packages/mesos-dns-v0.5.2-linux-amd64
-    destination: /usr/bin/mesos-dns
-  - source: /init/consul-client.conf
-    destination: /etc/init/
+    destination: /usr/bin/
 permissions:
-  - object: /etc/init/consul-client.conf
-    owner: root
-    group: root
-    mode: 644
-  - object: /usr/bin/mesos-dns
+  - object: /usr/bin/mesos-dns-v0.5.2-linux-amd64
     owner: root
     group: root
     mode: 755

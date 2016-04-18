@@ -25,6 +25,9 @@ hooks:
     - location: scripts/consul_client.sh
       timeout: 300
       runas: root
+    - location: scripts/dns-services.sh
+      timeout: 300
+      runas: root
     - location: scripts/docker_prebuild.sh
       timeout: 300
       runas: root

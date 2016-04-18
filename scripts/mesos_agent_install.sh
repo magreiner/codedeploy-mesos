@@ -49,6 +49,7 @@ echo "cgroups/cpu,cgroups/mem"          | tee /etc/mesos-slave/isolation
 # Doesnt work yet
 # echo "ports:[3306-3306,4567-4567,4568-4568,4444-4444,31000-32000]" | tee /etc/mesos-slave/resources
 
-service mesos-slave restart
+service mesos-slave stop
+service mesos-slave start
 
 # screen -dmS mesos-agent bash -c  "/usr/sbin/mesos-slave --master=$FIRST_MASTER_IP:5050 --ip=$LOCAL_IP_ADDRESS --work_dir=/var/lib/mesos"

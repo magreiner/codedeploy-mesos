@@ -24,6 +24,3 @@ hooks:
     - location: scripts/vault.sh
       timeout: 300
       runas: root
-    - location: scripts/docker_prebuild.sh
-      timeout: 300
-      runas: root

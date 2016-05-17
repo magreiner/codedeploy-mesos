@@ -9,7 +9,7 @@ AZ="$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zon
 REGION="${AZ::-1}"
 
 # Looking for other master instances for HA (Zookeeper)
-MASTER_IPS="$(aws ec2 describe-instances --region $REGION --filters "Name=tag:Name,Values=$MASTER_INSTANCE_TAGNAME" | jq '. | {ips: .Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddress}' | grep "\." | cut -f4 -d'"')"
+MASTER_IPS="$(aws ec2 describe-instances --region $REGION --filters "Name=tag:Name,Values=$MASTER_INSTANCE_TAGNAME" --query 'Reservations[*].Instances[*].NetworkInterfaces[*].PrivateIpAddress' --output text)"
 FIRST_MASTER_IP="$(echo "$MASTER_IPS" | head -n1)"
 
 #

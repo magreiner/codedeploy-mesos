@@ -17,6 +17,7 @@ apt-get install -qy curl \
                     nano
 
 mkdir -p /usr/java
+rm -rf /usr/java/default &>/dev/null
 ln -s /usr/lib/jvm/java-8-oracle/ /usr/java/default
 echo JAVA_HOME=/usr/java/default >> /etc/environment
 echo PATH=$JAVA_HOME/bin:$PATH >> /etc/environment

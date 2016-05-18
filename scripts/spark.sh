@@ -37,8 +37,6 @@ pip install awscli
 # only re-download spark if its not already running
 # if its there but not running cleanup and replace it with newer version
 if [ "1" -ge "$(ps -aux | grep spark.deploy.worker | wc -l)" ]; then
-  echo hi
-fi
   rm -rf "$SPARK_HOME" &>/dev/null
   mkdir -p "$SPARK_HOME"
   /usr/local/bin/aws s3 cp --region $AWS_REGION "s3://$S3_BUCKET/clusterData/spark-$SPARK_VERSION-bin-hadoop2.6.tgz" - |\

@@ -67,6 +67,7 @@ SPARK_LOCAL_IP="$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)"
 # - SPARK_MASTER_IP, to bind the master to a different IP address or hostname
 SPARK_MASTER_IP="$SPARK_LOCAL_IP"
 # - SPARK_MASTER_PORT / SPARK_MASTER_WEBUI_PORT, to use non-default ports for the master
+SPARK_MASTER_WEBUI_PORT="8081"
 # - SPARK_MASTER_OPTS, to set config properties only for the master (e.g. "-Dx=y")
 # - SPARK_WORKER_CORES, to set the number of cores to use on this machine
 # - SPARK_WORKER_MEMORY, to set how much total memory workers have to give executors (e.g. 1000m, 2g)
@@ -89,7 +90,7 @@ SPARK_MASTER_IP="$SPARK_LOCAL_IP"
 EOF
 
 if [ "$NODE_TYPE" = "master" ]; then
-  $SPARK_HOME/sbin/start-master.sh
+  RUN_INFO=$($SPARK_HOME/sbin/start-master.sh)
 else
   MASTER_INSTANCE_TAGNAME="AS_Master"
 
@@ -98,7 +99,7 @@ else
   MASTER_IPS="$(aws ec2 describe-instances --region $REGION --filters "Name=tag:Name,Values=$MASTER_INSTANCE_TAGNAME" --query 'Reservations[*].Instances[*].NetworkInterfaces[*].PrivateIpAddress' --output text)"
   FIRST_MASTER_IP="$(echo "$MASTER_IPS" | head -n1)"
 
-  $SPARK_HOME/sbin/start-slave.sh spark://$FIRST_MASTER_IP:7077
+  RUN_INFO=$($SPARK_HOME/sbin/start-slave.sh spark://$FIRST_MASTER_IP:7077)
 fi
-
-tail -F logs/spark--org.apache.spark.deploy*
+LOGFILE=$(echo $R | grep $SPARK_HOME | cut -d' ' -f5)
+tail -F $LOGFILE

@@ -36,15 +36,16 @@ pip install awscli
 
 # only re-download spark if its not already running
 # if its there but not running cleanup and replace it with newer version
-if [ "1" -ge "$(ps -aux | grep spark.deploy.worker | wc -l)" ]; then
-  rm -rf "$SPARK_HOME" &>/dev/null
+# if [ "1" -ge "$(ps -aux | grep spark.deploy.worker | wc -l)" ]; then
+  # rm -rf "$SPARK_HOME" &>/dev/null
+if [ ! -d "$SPARK_HOME" ]; then
   mkdir -p "$SPARK_HOME"
   /usr/local/bin/aws s3 cp --region $AWS_REGION "s3://$S3_BUCKET/clusterData/spark-$SPARK_VERSION-bin-hadoop2.6.tgz" - |\
     tar -C "$SPARK_HOME"  --strip-components=1 -zxf -
 fi
 export PATH=$JAVA_HOME/bin:$PATH
 
-cat >> "$SPARK_HOME/conf/spark-env.sh" << EOF
+cat > "$SPARK_HOME/conf/spark-env.sh" << EOF
 # Options read when launching programs locally with
 # ./bin/run-example or ./bin/spark-submit
 # - HADOOP_CONF_DIR, to point Spark towards Hadoop configuration files

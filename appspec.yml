@@ -5,6 +5,8 @@ files:
     destination: /usr/bin/
   - source: /packages/vault_0.5.2_linux_amd64.zip
     destination: /tmp/
+  - source: /scripts/spark.sh
+    destination: /opt/
 permissions:
   - object: /usr/bin/mesos-dns-v0.5.2-linux-amd64
     owner: root

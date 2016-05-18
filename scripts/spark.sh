@@ -102,5 +102,7 @@ else
 
   RUN_INFO=$($SPARK_HOME/sbin/start-slave.sh spark://$FIRST_MASTER_IP:7077)
 fi
-LOGFILE=$(echo $R | grep $SPARK_HOME | cut -d' ' -f5)
-tail -F $LOGFILE
+if [ "MODE" != "quiet" ]; then
+  LOGFILE=$(echo $RUN_INFO | grep $SPARK_HOME | cut -d' ' -f5)
+  tail -F $LOGFILE
+fi
